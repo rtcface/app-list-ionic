@@ -5,15 +5,17 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
-
+import { ScanComponent } from './components/scan/scan.component';
+import { RegisterComponent } from './components/register/register.component';
+import { BarcodeScanningModalComponent } from './components/barcode-scanning-modal/barcode-scanning-modal.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    HomePageRoutingModule
+  imports: [CommonModule, FormsModule, IonicModule, HomePageRoutingModule],
+  declarations: [
+    HomePage,
+    ScanComponent,
+    RegisterComponent,
+    BarcodeScanningModalComponent,
   ],
-  declarations: [HomePage]
 })
 export class HomePageModule {}

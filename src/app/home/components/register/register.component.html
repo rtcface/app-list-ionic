@@ -1,0 +1,26 @@
+<div>
+  <ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col> Id </ion-col>
+        <ion-col>Nombre</ion-col>
+        <ion-col>Puesto</ion-col>
+        <ion-col>Municipio</ion-col>
+      </ion-row>
+      <ion-row *ngFor="let item of lista_register">
+        <ion-col>{{ item.id }}</ion-col>
+        <ion-col>{{ item.name }}</ion-col>
+        <ion-col>{{ item.puesto }}</ion-col>
+        <ion-col>{{ item.municipio }}</ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+  <ion-button (click)="update_data()" fill="outline" color="primary">
+    <ion-icon name="refresh"></ion-icon>
+    Actualizar
+  </ion-button>
+  <ion-button fill="outline" color="success">
+    <ion-icon name="download-outline"></ion-icon>
+    Exportar a CSV
+  </ion-button>
+</div>

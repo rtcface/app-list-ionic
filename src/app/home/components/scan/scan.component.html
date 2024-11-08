@@ -1,0 +1,22 @@
+<div class="segment-content">
+  <img src="assets/images/scan-qr.webp" alt="qr" />
+  <h6>Scan the QR code</h6>
+  <ion-row>
+    <ion-col size="12">
+      <ion-button (click)="startScan()" fill="outline">
+        <ion-icon slot="start" name="qr-code-outline"></ion-icon>
+        Scan
+      </ion-button>
+      <ion-button fill="outline" color="warning" (click)="save(scanResult)">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        Ingreso Manual
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-item>
+    <ion-label>Result</ion-label>
+    <div>
+      <ion-text color="success">{{ scanResult }}</ion-text>
+    </div>
+  </ion-item>
+</div>
