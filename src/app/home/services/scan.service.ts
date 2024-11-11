@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { StorageService } from './storage.service';
 import { usuario } from '../components/interfaces/usuario';
 
+const STORAGE_KEY = 'app-lista';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -16,27 +18,19 @@ export class ScanService {
     }
   };
 
-  saveUser({ id, name, puesto, municipio }: usuario) {
-    this.storage.set('id', id);
-    this.storage.set('name', name);
-    this.storage.set('puesto', puesto);
-    this.storage.set('municipio', municipio);
+  async saveUser(user: usuario) {
+    const stData = (await this.storage.get(STORAGE_KEY)) || [];
+    stData.push(user);
+    console.log(stData);
+    return this.storage.set(STORAGE_KEY, stData);
   }
-
-  async checkUser({ id, name, puesto, municipio }: usuario): Promise<boolean> {
-    const user = await this.storage.get('id');
-    const nameUser = await this.storage.get('name');
-    const puestoUser = await this.storage.get('puesto');
-    const municipioUser = await this.storage.get('municipio');
-    if (
-      user === id &&
-      name === nameUser &&
-      puesto === puestoUser &&
-      municipio === municipioUser
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+  async clearDB() {
+    return this.storage.clear();
+  }
+  async userExist(user: usuario): Promise<boolean> {
+    const stData = (await this.storage.get(STORAGE_KEY)) || [];
+    console.log(stData);
+    const userExist = stData.find((element: usuario) => element.id === user.id);
+    return userExist ? true : false;
   }
 }

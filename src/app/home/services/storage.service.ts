@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Storage } from '@ionic/storage-angular';
 
-import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
-import { Drivers } from '@ionic/storage';
+//import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+//import { Drivers } from '@ionic/storage';
 @Injectable({
   providedIn: 'root',
 })
@@ -25,7 +25,7 @@ export class StorageService {
     //   ],
     // });
     // await this.storage.defineDriver(CordovaSQLiteDriver);
-    await this.storage.create();
+    //await this.storage.create();
     this._storage = storage;
   }
 
@@ -48,11 +48,5 @@ export class StorageService {
   }
   public length() {
     return this._storage?.length();
-  }
-
-  // Methods for add new itenms to the storage
-  async addItem(item: any) {
-    const storage = await this.storage.create();
-    await storage.set(item.id, item);
   }
 }

@@ -4,3 +4,9 @@ export interface usuario {
   puesto: string;
   municipio: string;
 }
+
+export interface saveUser {
+  name: string;
+  puesto: string;
+  municipio: string;
+}
