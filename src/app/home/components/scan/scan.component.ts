@@ -50,7 +50,7 @@ export class ScanComponent implements OnInit {
     },
   ];
 
-  scanResult = 'Sesaet001-Juan Tepehua-Analista de Tecnología-Tlaxcala';
+  scanResult = '';
   usuario: usuario = {
     id: '',
     name: '',
