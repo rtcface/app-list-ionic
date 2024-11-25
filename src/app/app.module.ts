@@ -10,6 +10,8 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { Drivers } from '@ionic/storage';
 
 import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,7 +28,11 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
       ],
     }),
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    File,
+    AndroidPermissions,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -4,8 +4,14 @@ import { usuario } from '../interfaces/usuario';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Platform } from '@ionic/angular';
-
-import { Filesystem as FileSystem } from '@capacitor/filesystem';
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+//
+// import {
+//   Filesystem as FileSystem,
+//   Directory,
+//   Encoding,
+// } from '@capacitor/filesystem';
 
 @Component({
   selector: 'app-register',
@@ -16,17 +22,34 @@ export class RegisterComponent implements OnInit {
   constructor(
     private register: RegisterService,
     private platform: Platform,
-  ) {}
+    private file: File,
+    private androidPermissions: AndroidPermissions,
+  ) {
+    this.platform.ready().then(() => {
+      console.log('Plataforma lista');
+    });
+  }
   lista_register: usuario[] = [];
   async ngOnInit() {
     await this.update_data();
     // valida si la app tiene permisos para el Filesystem
     if (this.platform.is('capacitor')) {
-      FileSystem.checkPermissions().then();
-      FileSystem.removeAllListeners();
+      console.log('---------platform is capacitor-------');
+      const permission = await this.androidPermissions.checkPermission(
+        this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE,
+      );
+      if (!permission.hasPermission) {
+        console.log('no tiene permisos');
+        await this.androidPermissions.requestPermission(
+          this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE,
+        );
+      }
+      console.log('permisos ok');
     }
   }
   async update_data() {
+    console.log('update_data');
+    //
     this.lista_register = await this.register.loadGrid();
   }
 
@@ -49,8 +72,10 @@ export class RegisterComponent implements OnInit {
 
     //saveAs(blob, fileName);
     if (this.platform.is('capacitor')) {
-      this.blobFileWrite(fileName, blob);
+      console.log('---------platform is capacitor-------');
+      this.blobFileWrite('data_file/' + fileName, blob);
     } else {
+      console.log('---------platform is not capacitor-------');
       saveAs(blob, fileName);
     }
   }
@@ -59,25 +84,32 @@ export class RegisterComponent implements OnInit {
     const reader = new FileReader();
 
     // This fires after the blob has been read/loaded.
-    reader.addEventListener('loadend', (e: any) => {
-      const text = e.srcElement.result;
-      this.fileWrite(filename, text);
-    });
+    // reader.addEventListener('loadend', (e: any) => {
+    //   const text = e.srcElement.result;
+    // });
+
+    this.fileWrite(filename, blobfile);
 
     // Start reading the blob as text.
     reader.readAsText(blobfile);
   }
-  fileWrite(filename: string, filedata: string) {
+  async fileWrite(fileName: string, blob: Blob) {
     try {
-      FileSystem.writeFile({
-        path: filename,
-        data: filedata,
-        // ,
-        // directory: FilesystemDirectory.Documents,
-        // encoding: FilesystemEncoding.UTF8
+      const path = this.platform.is('capacitor')
+        ? this.file.externalDataDirectory
+        : this.file.documentsDirectory;
+
+      const fullPath = `${path}${fileName}.xlsx`;
+
+      // Escribir archivo
+      await this.file.writeFile(path, `${fileName}.xlsx`, blob, {
+        replace: true,
       });
+      console.log('Archivo guardado en:', fullPath);
+      alert(`Archivo guardado en: ${fullPath}`);
     } catch (e) {
-      console.error('Unable to write file', e);
+      console.error('Error al exportar:', e);
+      alert('Hubo un error al exportar el archivo.');
     }
   }
 }
