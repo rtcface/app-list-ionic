@@ -60,8 +60,7 @@ export class RegisterComponent implements OnInit {
     const wb: XLSX.WorkBook = { Sheets: { data: ws }, SheetNames: ['data'] };
     const fileType =
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    const fileExtension = '.xlsx';
-    const fileName = 'data' + fileExtension;
+    const fileName = 'data';
 
     const blob = new Blob(
       [XLSX.write(wb, { bookType: 'xlsx', type: 'array' })],
@@ -73,7 +72,7 @@ export class RegisterComponent implements OnInit {
     //saveAs(blob, fileName);
     if (this.platform.is('capacitor')) {
       console.log('---------platform is capacitor-------');
-      this.blobFileWrite('data_file/' + fileName, blob);
+      this.blobFileWrite(fileName, blob);
     } else {
       console.log('---------platform is not capacitor-------');
       saveAs(blob, fileName);
@@ -81,7 +80,7 @@ export class RegisterComponent implements OnInit {
   }
 
   blobFileWrite(filename: string, blobfile: Blob) {
-    const reader = new FileReader();
+    //const reader = new FileReader();
 
     // This fires after the blob has been read/loaded.
     // reader.addEventListener('loadend', (e: any) => {
@@ -91,16 +90,18 @@ export class RegisterComponent implements OnInit {
     this.fileWrite(filename, blobfile);
 
     // Start reading the blob as text.
-    reader.readAsText(blobfile);
+    //reader.readAsText(blobfile);
   }
   async fileWrite(fileName: string, blob: Blob) {
     try {
+      console.log('-----------------desde fileWrite-----------------');
       const path = this.platform.is('capacitor')
         ? this.file.externalDataDirectory
         : this.file.documentsDirectory;
 
       const fullPath = `${path}${fileName}.xlsx`;
-
+      console.log('-----------------fullPath-----------------');
+      console.log(fullPath);
       // Escribir archivo
       await this.file.writeFile(path, `${fileName}.xlsx`, blob, {
         replace: true,
